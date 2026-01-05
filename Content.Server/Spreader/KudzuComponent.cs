@@ -46,7 +46,7 @@ public sealed partial class KudzuComponent : Component
     /// How much the kudzu heals each tick
     /// </summary>
     [DataField]
-    public DamageSpecifier? DamageRecovery;
+    public DamageSpecifier? DamageRecovery = null;
 
     [DataField]
     public float GrowthTickChance = 1f;
