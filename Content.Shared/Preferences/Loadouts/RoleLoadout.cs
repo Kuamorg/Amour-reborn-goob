@@ -448,7 +448,6 @@ public sealed partial class RoleLoadout : IEquatable<RoleLoadout>
 
         if (!Role.Equals(other.Role) ||
             SelectedLoadouts.Count != other.SelectedLoadouts.Count ||
-            Points != other.Points ||
             EntityName != other.EntityName ||
             // Amour edit start
             EntityNameOverridden != other.EntityNameOverridden ||
@@ -478,6 +477,6 @@ public sealed partial class RoleLoadout : IEquatable<RoleLoadout>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Role, SelectedLoadouts, OverriddenGroups, Points, EntityName, EntityNameOverridden); // Amour edit
+        return HashCode.Combine(Role, SelectedLoadouts, OverriddenGroups, EntityName, EntityNameOverridden); // Amour edit
     }
 }

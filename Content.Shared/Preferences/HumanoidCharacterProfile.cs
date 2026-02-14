@@ -55,6 +55,7 @@ using Content.Shared.CCVar;
 using Content.Shared.GameTicking;
 using Content.Shared._Amour.TTS;
 using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences.Loadouts;
 using Content.Shared.Roles;
@@ -745,7 +746,7 @@ namespace Content.Shared.Preferences
             if (!_jobPriorities.SequenceEqual(other._jobPriorities)) return false;
             if (!_antagPreferences.SequenceEqual(other._antagPreferences)) return false;
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
-            if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
+            if (!Loadouts.SequenceEqual(other.Loadouts)) return false; // Amour edit
             if (!BaseLoadout.Equals(other.BaseLoadout)) return false; // Amour edit
             if (FlavorText != other.FlavorText) return false;
             // Orion-Start
@@ -980,6 +981,10 @@ namespace Content.Shared.Preferences
 
             var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
 
+            // Amour edit start - validate markings for AllowedUsers and MinBoostyTier
+            ValidateMarkingsForUser(appearance, session, collection);
+            // Amour edit end
+
             var prefsUnavailableMode = PreferenceUnavailable switch
             {
                 PreferenceUnavailableMode.StayInLobby => PreferenceUnavailableMode.StayInLobby,
@@ -1088,6 +1093,60 @@ namespace Content.Shared.Preferences
                 _loadouts.Remove(value);
             }
         }
+
+        // Amour edit start
+        /// <summary>
+        /// Validates markings for AllowedUsers and MinBoostyTier restrictions.
+        /// Removes markings that the user doesn't have access to.
+        /// </summary>
+        private void ValidateMarkingsForUser(HumanoidCharacterAppearance appearance, ICommonSession session, IDependencyCollection collection)
+        {
+            var markingManager = collection.Resolve<MarkingManager>();
+            var userName = session.Name;
+
+            // Get Boosty tier (only available on server)
+            int playerTierLevel = 0;
+            if (collection.TryResolveType<Content.Shared._Amour.Loadouts.Effects.IBoostyTierManager>(out var tierManager))
+            {
+                var tierInfo = tierManager.GetPlayerTier(session);
+                playerTierLevel = tierInfo?.IsActive == true ? tierInfo.TierLevel : 0;
+            }
+
+            // Collect indices of markings to remove (in reverse order)
+            var toRemove = new List<int>();
+
+            for (var i = 0; i < appearance.Markings.Count; i++)
+            {
+                var marking = appearance.Markings[i];
+                if (!markingManager.TryGetMarking(marking, out var prototype))
+                    continue;
+
+                // Check AllowedUsers
+                if (prototype.AllowedUsers != null && prototype.AllowedUsers.Count > 0)
+                {
+                    var isAllowed = prototype.AllowedUsers.Any(u =>
+                        string.Equals(u, userName, StringComparison.OrdinalIgnoreCase));
+                    if (!isAllowed)
+                    {
+                        toRemove.Add(i);
+                        continue;
+                    }
+                }
+
+                // Check MinBoostyTier
+                if (prototype.MinBoostyTier > 0 && playerTierLevel < prototype.MinBoostyTier)
+                {
+                    toRemove.Add(i);
+                }
+            }
+
+            // Remove invalid markings (in reverse order to preserve indices)
+            foreach (var index in toRemove.OrderByDescending(x => x))
+            {
+                appearance.Markings.RemoveAt(index);
+            }
+        }
+        // Amour edit end
 
         /// <summary>
         /// Takes in an IEnumerable of traits and returns a List of the valid traits.
@@ -1268,20 +1327,14 @@ namespace Content.Shared.Preferences
             baseCopy.Role = BaseLoadoutProtoId;
             baseCopy.SetDefault(this, session, protoManager);
 
-            if (protoManager.TryIndex<RoleLoadoutPrototype>(roleId, out var roleProto))
+            foreach (var (group, baseSel) in baseCopy.SelectedLoadouts)
             {
-                foreach (var group in roleProto.Groups)
-                {
-                    if (baseCopy.SelectedLoadouts.TryGetValue(group, out var baseSel))
-                        effective.SelectedLoadouts[group] = new List<Loadout>(baseSel);
-                }
-
-                // Inherit base name if role name not overridden.
-                if (baseCopy.EntityName != null)
-                    effective.EntityName = baseCopy.EntityName;
+                effective.SelectedLoadouts[group] = new List<Loadout>(baseSel);
             }
 
-            // Apply role overrides.
+            if (baseCopy.EntityName != null)
+                effective.EntityName = baseCopy.EntityName;
+
             if (_loadouts.TryGetValue(roleId, out var overrides))
             {
                 overrides.SetDefault(this, session, protoManager);

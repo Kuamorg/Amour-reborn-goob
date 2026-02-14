@@ -2139,6 +2139,18 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
             await db.DbContext.SaveChangesAsync();
         }
 
+        // Amour - Boosty Tier
+        public async Task<BoostyTierInfo?> GetBoostyTierAsync(Guid player, CancellationToken cancel = default)
+        {
+            await using var db = await GetDb(cancel);
+            var booster = await db.DbContext.AmourBoosters.FirstOrDefaultAsync(b => b.PlayerId == player, cancel);
+            
+            if (booster == null)
+                return null;
+
+            return new BoostyTierInfo(booster.TierName, booster.TierLevel, booster.IsActive);
+        }
+
         public async Task SetLobbyMessage(Guid player, string message)
         {
             await using var db = await GetDb();
@@ -2479,5 +2491,6 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         {
 
         }
+
     }
 }

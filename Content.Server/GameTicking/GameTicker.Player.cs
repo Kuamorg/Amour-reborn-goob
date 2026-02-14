@@ -74,6 +74,9 @@ namespace Content.Server.GameTicking
                     _userDb.ClientConnected(session); // Surely moving this here won't break anything? :clueless:
                     AddPlayerToDb(args.Session.UserId.UserId);
 
+                    // Amour - preload Boosty tier for loadout validation
+                    _ = _boostyTierManager.PreloadPlayerTierAsync(session);
+
                     // Always make sure the client has player data.
                     if (session.Data.ContentDataUncast == null)
                     {

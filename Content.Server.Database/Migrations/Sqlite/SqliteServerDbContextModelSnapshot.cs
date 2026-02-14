@@ -450,6 +450,14 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("INTEGER")
                         .HasColumnName("ooc_color");
 
+                    b.Property<int>("TierLevel")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("tier_level");
+
+                    b.Property<string>("TierName")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("tier_name");
+
                     b.HasKey("PlayerId")
                         .HasName("PK_amour_boosters");
 

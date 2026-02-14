@@ -28,6 +28,10 @@
     - ChemistUshanka
     - InteQBeret
     - InteQHatSoft
+    # Boosty
+    - LoadoutBoostyGammaBeret
+    - LoadoutBoostyCommissarCap
+    - LoadoutBoostyCapCap
 
 # Underwear (All roles)
 - type: loadoutGroup
@@ -204,6 +208,9 @@
     - SocksThinThigh
     - SocksUKKnee
     - SocksUKThigh
+    # Boosty
+    - LoadoutBoostySocksBlack
+    - LoadoutBoostySocksGray
 
 - type: loadoutGroup
   id: Wrists

@@ -243,6 +243,10 @@
   - GlassesJamjar
   - GlassesJensen
   - CheapSunglasses # Goobstation
+  # Boosty
+  - LoadoutBoostySerafimGlasses
+  - LoadoutBoostyDealGlasses
+  - LoadoutBoostyWhiteEyepatch
 
 - type: loadoutGroup
   id: Animals  # Goobstation
@@ -319,6 +323,8 @@
   - SheriffCap
   # Orion-End
   - CaptainCapcapSenior # goob
+  # Boosty
+  - LoadoutBoostyCapCap
 
 - type: loadoutGroup
   id: CaptainJumpsuit
@@ -354,6 +360,8 @@
   # Orion-End
   - VeteranCaptainCloak # goob
   - CaptainEnsemble # goob
+  # Boosty
+  - LoadoutBoostyCapCloak
 
 - type: loadoutGroup
   id: CaptainBackpack
@@ -447,6 +455,15 @@
   - MaroonMJ
   - QuarterzipJumpsuit
  # goob changes end
+  # Boosty
+  - LoadoutBoostyMauryHoodie
+  - LoadoutBoostyWareteJumpskirt
+  - LoadoutBoostySerafimSalvage
+  - LoadoutBoostyDeusJumpskirt
+  - LoadoutBoostyGammaUniform
+  - LoadoutBoostyCommissarUniform
+  - LoadoutBoostyWhiteSuit
+  - LoadoutBoostyEmeraldUniform
 
 - type: loadoutGroup
   id: PassengerFace
@@ -454,6 +471,8 @@
   minLimit: 0
   loadouts:
   - PassengerFace
+  # Boosty
+  - LoadoutBoostyTechpriestMask
 
 - type: loadoutGroup
   id: PassengerGloves
@@ -470,6 +489,8 @@
   - CommonSatchel
   - CommonDuffel
   - CommonMessenger # Frontier
+  # Boosty
+  - LoadoutBoostyVoidBackpack
 
 - type: loadoutGroup
   id: PassengerNeck
@@ -478,6 +499,14 @@
   loadouts:
   - Mantle
   - OldNeckWrap # EE
+  # Boosty
+  - LoadoutBoostyMauryChoker
+  - LoadoutBoostyHSKveezKulon
+  - LoadoutBoosty6elbluCloak
+  - LoadoutBoostySkrimexCloak
+  - LoadoutBoostyChaplainSchema
+  - LoadoutBoostyEmeraldTie
+  - LoadoutBoostyCapCloak
 
 - type: loadoutGroup
   id: PassengerOuterClothing
@@ -489,6 +518,18 @@
   - InteQWinter
   - InteQHoodie
   # Orion-End
+  # Boosty
+  - LoadoutBoosty6elbluOvercoat
+  - LoadoutBoostySamuraiJacket
+  - LoadoutBoostyCommissarCoat
+  - LoadoutBoostyVoidCoat
+  - LoadoutBoostyTraumaJacket
+  - LoadoutBoostyTechpriestMantle
+  - LoadoutBoostyWhiteCoat
+  - LoadoutBoostyFuturisticCoat
+  - LoadoutBoostyTealSuit
+  - LoadoutBoostyRitokaCloak
+  - LoadoutBoostyEmeraldCoat
 
 - type: loadoutGroup
   id: PassengerShoes
@@ -496,6 +537,10 @@
   loadouts:
   - BlackShoes
   - WinterBoots
+  # Boosty
+  - LoadoutBoostyMaurySneakers
+  - LoadoutBoostyVoidShoes
+  - LoadoutBoostySkates
 
 - type: loadoutGroup
   id: BartenderHead
@@ -631,6 +676,8 @@
   minLimit: 0
   loadouts:
   - ChaplainNeck
+  # Boosty
+  - LoadoutBoostyChaplainSchema
 
 - type: loadoutGroup
   id: JanitorHead
@@ -968,6 +1015,8 @@
   - SalvageSpecialistSatchel
   - SalvageSpecialistDuffel
   - SalvageSpecialistMessenger # Frontier
+  # Boosty
+  - LoadoutBoostyVoidBackpack
 
 - type: loadoutGroup
   id: SalvageSpecialistOuterClothing
@@ -975,6 +1024,8 @@
   minLimit: 0
   loadouts:
   - SalvageSpecialistWintercoat
+  # Boosty
+  - LoadoutBoostyVoidCoat
 
 - type: loadoutGroup
   id: SalvageSpecialistShoes
@@ -1345,6 +1396,9 @@
   - SecurityHat
   - TrooperHat
   - SecuritySideCap # Orion
+  # Boosty
+  - LoadoutBoostyCommissarCap
+  - LoadoutBoostyGammaBeret
 
 - type: loadoutGroup
   id: SecurityJumpsuit
@@ -1354,6 +1408,9 @@
   - SecurityJumpskirt
   - SecurityJumpsuitGrey
   - SecurityJumpskirtGrey
+  # Boosty
+  - LoadoutBoostyCommissarUniform
+  - LoadoutBoostyGammaUniform
   - SeniorOfficerJumpsuit
   - SeniorOfficerJumpskirt
   - TrooperUniform
@@ -1374,6 +1431,8 @@
   - SecurityBelt
   - SecurityWebbing
   - SecurityJudoBelt # Goobstation - Martial Arts
+  # Boosty
+  - LoadoutBoostyWebbing
 
 - type: loadoutGroup
   id: SecurityOuterClothing
@@ -1383,6 +1442,8 @@
   - ArmorVestSlim
   - SecurityOfficerWintercoat
   - WinterCoatSeniorSecArmored # Goobstation
+  # Boosty
+  - LoadoutBoostyCommissarCoat
 
 - type: loadoutGroup
   id: SecurityShoes
@@ -1539,6 +1600,8 @@
   - RegularLabCoat
   - MedicalDoctorWintercoat
   - SeniorPhysicianLabCoat
+  # Boosty
+  - LoadoutBoostyTraumaJacket
 
 - type: loadoutGroup
   id: MedicalBackpack
@@ -1642,6 +1705,8 @@
   - ParamedicWintercoat
   - ParamedicDavidsJacket # Goobstation
   - SeniorPhysicianLabCoat # Goobstation
+  # Boosty
+  - LoadoutBoostyTraumaJacket
 
 - type: loadoutGroup
   id: ParamedicShoes

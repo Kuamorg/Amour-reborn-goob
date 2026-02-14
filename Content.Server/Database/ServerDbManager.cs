@@ -443,6 +443,8 @@ namespace Content.Server.Database
         Task<int?> GetBoosterColor(Guid player, CancellationToken cancel);
         Task SetBoosterColor(Guid player, int? color);
 
+        Task<BoostyTierInfo?> GetBoostyTierAsync(Guid player, CancellationToken cancel = default);
+
         Task SetLobbyMessage(Guid player, string message);
 
         Task SetNTShoutout(Guid player, string name);
@@ -1255,6 +1257,12 @@ namespace Content.Server.Database
         {
             DbWriteOpsMetric.Inc();
             return RunDbCommand(() => _db.SetBoosterColor(player, color));
+        }
+
+        public Task<BoostyTierInfo?> GetBoostyTierAsync(Guid player, CancellationToken cancel = default)
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.GetBoostyTierAsync(player, cancel));
         }
 
         public Task SetLobbyMessage(Guid player, string message)
