@@ -25,7 +25,9 @@ namespace Content.Client.Lobby.UI.Loadouts;
 public enum LoadoutSourceType
 {
     UserSelected,
-    InheritedFromBase
+    InheritedFromBase,
+    PersonalFluff,
+    BoostySubscription
 }
 // Amour edit end
 
@@ -64,6 +66,15 @@ public sealed partial class LoadoutContainer : BoxContainer
 
     private void UpdateButtonStyle()
     {
+        if (_sourceType == LoadoutSourceType.PersonalFluff || _sourceType == LoadoutSourceType.BoostySubscription)
+        {
+            if (!SelectButton.Pressed)
+            {
+                SelectButton.ModulateSelfOverride = null;
+                return;
+            }
+        }
+
         if (!SelectButton.Pressed)
         {
             SelectButton.ModulateSelfOverride = null;

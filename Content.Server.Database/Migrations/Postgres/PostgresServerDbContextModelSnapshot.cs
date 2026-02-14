@@ -476,6 +476,14 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("integer")
                         .HasColumnName("ooc_color");
 
+                    b.Property<int>("TierLevel")
+                        .HasColumnType("integer")
+                        .HasColumnName("tier_level");
+
+                    b.Property<string>("TierName")
+                        .HasColumnType("text")
+                        .HasColumnName("tier_name");
+
                     b.HasKey("PlayerId")
                         .HasName("PK_amour_boosters");
 

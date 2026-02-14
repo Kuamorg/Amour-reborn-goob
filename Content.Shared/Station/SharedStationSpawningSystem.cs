@@ -223,6 +223,10 @@ public abstract class SharedStationSpawningSystem : EntitySystem
                 var equipmentStr = startingGear.GetGear(slot.Name);
                 if (!string.IsNullOrEmpty(equipmentStr))
                 {
+                    // Amour add
+                    if (InventorySystem.TryGetSlotEntity(entity, slot.Name, out _))
+                        continue;
+
                     var equipmentEntity = Spawn(equipmentStr, xform.Coordinates);
                     if (slot.Whitelist != null && !_whitelist.IsWhitelistPass(slot.Whitelist, equipmentEntity)) // Goob Change - Plasmamen
                     {

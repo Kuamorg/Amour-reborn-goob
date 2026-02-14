@@ -49,8 +49,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using System.Linq;
 using System.Numerics;
 using Content.Client.UserInterface.Controls;
+using Content.Shared._Amour.Loadouts.Effects;
 using Content.Shared.CCVar;
 using Content.Shared.Preferences;
 using Content.Shared.Preferences.Loadouts;
@@ -85,7 +87,7 @@ public sealed partial class LoadoutWindow : FancyWindow
 
         RevertToBaseButton.Visible = showRevertToBase;
         RevertToBaseButton.OnPressed += _ => OnRevertToBase?.Invoke();
-        // Amour edit end
+     // Amour edit end
         var protoManager = collection.Resolve<IPrototypeManager>();
         var configManager = collection.Resolve<IConfigurationManager>();
 
@@ -120,12 +122,21 @@ public sealed partial class LoadoutWindow : FancyWindow
         }
         else
         {
-            foreach (var group in proto.Groups)
+            // Amour
+            var allGroups = GetAllGroupsWithBaseCrew(proto, protoManager);
+            var baseCrewGroupIds = GetBaseCrewGroupIds(protoManager);
+
+            foreach (var group in allGroups)
             {
                 if (!protoManager.TryIndex(group, out var groupProto))
                     continue;
 
                 if (groupProto.Hidden)
+                    continue;
+
+                // Amour
+                var hasAvailableLoadouts = HasAvailableLoadoutsForUser(groupProto, profile, loadout, session, collection, protoManager);
+                if (!hasAvailableLoadouts)
                     continue;
 
                 var container = new LoadoutGroupContainer(profile, loadout, protoManager.Index(group), session, collection);
@@ -152,4 +163,76 @@ public sealed partial class LoadoutWindow : FancyWindow
             group.RefreshLoadouts(Profile, loadout, session, collection);
         }
     }
+
+    // Amour edit start
+    private static List<ProtoId<LoadoutGroupPrototype>> GetAllGroupsWithBaseCrew(RoleLoadoutPrototype proto, IPrototypeManager protoManager)
+    {
+        var result = new List<ProtoId<LoadoutGroupPrototype>>(proto.Groups);
+
+        if (proto.ID == "BaseCrew" || proto.ID.StartsWith("RoleSurvival") || proto.ID == "JobBorg" || proto.ID == "JobStationAi")
+            return result;
+
+        if (protoManager.TryIndex<RoleLoadoutPrototype>("BaseCrew", out var baseCrew))
+        {
+            foreach (var baseGroup in baseCrew.Groups)
+            {
+                if (!result.Contains(baseGroup))
+                    result.Add(baseGroup);
+            }
+        }
+
+        return result;
+    }
+
+    private static HashSet<string> GetBaseCrewGroupIds(IPrototypeManager protoManager)
+    {
+        var result = new HashSet<string>();
+
+        if (protoManager.TryIndex<RoleLoadoutPrototype>("BaseCrew", out var baseCrew))
+        {
+            foreach (var group in baseCrew.Groups)
+            {
+                result.Add(group.Id);
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Check if the given loadout group has any loadouts available to the current user.
+    /// Groups with only UserNameLoadoutEffect-restricted loadouts will return false if none are valid for this user.
+    /// </summary>
+    private static bool HasAvailableLoadoutsForUser(
+        LoadoutGroupPrototype groupProto,
+        HumanoidCharacterProfile profile,
+        RoleLoadout loadout,
+        ICommonSession session,
+        IDependencyCollection collection,
+        IPrototypeManager protoManager)
+    {
+        foreach (var loadoutId in groupProto.Loadouts)
+        {
+            if (!protoManager.TryIndex<LoadoutPrototype>(loadoutId, out var loadoutProto))
+                continue;
+
+            // Check if this loadout has UserNameLoadoutEffect
+            var hasUserNameEffect = loadoutProto.Effects.Any(e => e is UserNameLoadoutEffect);
+
+            if (hasUserNameEffect)
+            {
+                // For personal fluff loadouts, check if this user can use it
+                if (loadout.IsValid(profile, session, loadoutId, collection, out _))
+                    return true; // At least one loadout is valid
+            }
+            else
+            {
+                // Non-personal loadout - group has available content
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
+// Amour edit end

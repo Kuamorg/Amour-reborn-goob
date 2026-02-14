@@ -745,7 +745,7 @@ namespace Content.Shared.Preferences
             if (!_jobPriorities.SequenceEqual(other._jobPriorities)) return false;
             if (!_antagPreferences.SequenceEqual(other._antagPreferences)) return false;
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
-            if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
+            if (!Loadouts.SequenceEqual(other.Loadouts)) return false; // Amour edit
             if (!BaseLoadout.Equals(other.BaseLoadout)) return false; // Amour edit
             if (FlavorText != other.FlavorText) return false;
             // Orion-Start
@@ -1268,20 +1268,14 @@ namespace Content.Shared.Preferences
             baseCopy.Role = BaseLoadoutProtoId;
             baseCopy.SetDefault(this, session, protoManager);
 
-            if (protoManager.TryIndex<RoleLoadoutPrototype>(roleId, out var roleProto))
+            foreach (var (group, baseSel) in baseCopy.SelectedLoadouts)
             {
-                foreach (var group in roleProto.Groups)
-                {
-                    if (baseCopy.SelectedLoadouts.TryGetValue(group, out var baseSel))
-                        effective.SelectedLoadouts[group] = new List<Loadout>(baseSel);
-                }
-
-                // Inherit base name if role name not overridden.
-                if (baseCopy.EntityName != null)
-                    effective.EntityName = baseCopy.EntityName;
+                effective.SelectedLoadouts[group] = new List<Loadout>(baseSel);
             }
 
-            // Apply role overrides.
+            if (baseCopy.EntityName != null)
+                effective.EntityName = baseCopy.EntityName;
+
             if (_loadouts.TryGetValue(roleId, out var overrides))
             {
                 overrides.SetDefault(this, session, protoManager);
