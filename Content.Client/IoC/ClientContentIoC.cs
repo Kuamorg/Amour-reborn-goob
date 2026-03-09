@@ -191,6 +191,7 @@ namespace Content.Client.IoC
             collection.Register<ClientsidePlaytimeTrackingManager>();
             collection.Register<TTSManager>(); // WD EDIT TTS
             collection.Register<IBoostyTierManager, BoostyTierManager>(); // Amour - Boosty tier for loadouts
+            collection.Register<Content.Client._Amour.Registry.ClientMetricsManager>(); // Amour edit
         }
     }
 }

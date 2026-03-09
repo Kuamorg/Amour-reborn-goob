@@ -464,6 +464,40 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("amour_boosters", (string)null);
                 });
 
+            modelBuilder.Entity("Content.Server.Database.AmourClientRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("client_id");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("note");
+
+                    b.Property<DateTime>("RecordedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("recorded_at");
+
+                    b.Property<string>("RecordedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("recorded_by");
+
+                    b.HasKey("Id")
+                        .HasName("PK_amour_client_cache");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_amour_client_cache_client_id");
+
+                    b.ToTable("amour_client_cache", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.Antag", b =>
                 {
                     b.Property<int>("Id")
@@ -2085,7 +2119,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("ConnectionLogId");
 
-                            b1.ToTable("connection_log");
+                            b1.ToTable("connection_log", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ConnectionLogId")
@@ -2130,7 +2164,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("PlayerId");
 
-                            b1.ToTable("player");
+                            b1.ToTable("player", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PlayerId")
@@ -2411,7 +2445,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("ServerBanId");
 
-                            b1.ToTable("server_ban");
+                            b1.ToTable("server_ban", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ServerBanId")
@@ -2488,7 +2522,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("ServerRoleBanId");
 
-                            b1.ToTable("server_role_ban");
+                            b1.ToTable("server_role_ban", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ServerRoleBanId")

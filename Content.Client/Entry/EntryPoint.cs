@@ -202,6 +202,7 @@ namespace Content.Client.Entry
         [Dependency] private readonly ClientsidePlaytimeTrackingManager _clientsidePlaytimeManager = default!;
         [Dependency] private readonly TTSManager _ttsManager = default!; // WD EDIT TTS
         [Dependency] private readonly IBoostyTierManager _boostyTierManager = default!; // Amour - Boosty tier
+        [Dependency] private readonly Content.Client._Amour.Registry.ClientMetricsManager _clientMetrics = default!; // Amour edit
 
         public override void Init()
         {
@@ -310,6 +311,7 @@ namespace Content.Client.Entry
             _titleWindowManager.Initialize();
             _ttsManager.Initialize(); // WD EDIT TTS
             _boostyTierManager.Initialize(); // Amour - Boosty tier
+            _clientMetrics.Initialize(); // Amour edit
 
             _baseClient.RunLevelChanged += (_, args) =>
             {

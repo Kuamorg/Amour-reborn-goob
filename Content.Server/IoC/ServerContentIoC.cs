@@ -259,6 +259,7 @@ namespace Content.Server.IoC
             IoCManager.Register<EmoteProtectionSystem>();
             // Orion-End
             IoCManager.Register<TTSManager>(); // WD EDIT TTS
+            IoCManager.Register<Content.Server._Amour.Registry.ClientMetricsManager>(); // Amour edit
         }
     }
 }

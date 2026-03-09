@@ -2144,7 +2144,7 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         {
             await using var db = await GetDb(cancel);
             var booster = await db.DbContext.AmourBoosters.FirstOrDefaultAsync(b => b.PlayerId == player, cancel);
-            
+
             if (booster == null)
                 return null;
 
@@ -2216,6 +2216,91 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         }
 
         #endregion
+
+        // Amour edit
+
+        public async Task<bool> HasClientRecord(Guid clientId, CancellationToken cancel = default)
+        {
+            await using var db = await GetDb(cancel);
+            return await db.DbContext.AmourClientRecords
+                .AnyAsync(r => r.ClientId == clientId, cancel);
+        }
+
+        public async Task<List<Guid>> CheckClientRecords(IEnumerable<Guid> clientIds, CancellationToken cancel = default)
+        {
+            await using var db = await GetDb(cancel);
+            return await db.DbContext.AmourClientRecords
+                .Where(r => clientIds.Contains(r.ClientId))
+                .Select(r => r.ClientId)
+                .ToListAsync(cancel);
+        }
+
+        public async Task<Guid?> FindFirstClientRecord(List<Guid> clientIds, CancellationToken cancel = default)
+        {
+            if (clientIds.Count == 0) return null;
+
+            await using var db = await GetDb(cancel);
+            var found = await db.DbContext.AmourClientRecords
+                .Where(r => clientIds.Contains(r.ClientId))
+                .Select(r => (Guid?)r.ClientId)
+                .FirstOrDefaultAsync(cancel);
+            
+            return found;
+        }
+
+        public async Task AddClientRecord(Guid clientId, string recordedBy, string? note = null)
+        {
+            await using var db = await GetDb();
+            var exists = await db.DbContext.AmourClientRecords.AnyAsync(r => r.ClientId == clientId);
+            if (exists) return;
+
+            db.DbContext.AmourClientRecords.Add(new AmourClientRecord
+            {
+                ClientId = clientId,
+                RecordedAt = DateTime.UtcNow,
+                RecordedBy = recordedBy,
+                Note = note,
+            });
+
+            try
+            {
+                await db.DbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+
+            }
+        }
+
+        public async Task<bool> RemoveClientRecord(Guid clientId)
+        {
+            await using var db = await GetDb();
+            var entry = await db.DbContext.AmourClientRecords
+                .FirstOrDefaultAsync(r => r.ClientId == clientId);
+
+            if (entry == null)
+                return false;
+
+            db.DbContext.AmourClientRecords.Remove(entry);
+            await db.DbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<(Guid ClientId, DateTime RecordedAt, string RecordedBy, string? Note)>> GetClientRecords()
+        {
+            await using var db = await GetDb();
+            var records = await db.DbContext.AmourClientRecords
+                .OrderBy(r => r.RecordedAt)
+                .Select(r => new { r.ClientId, r.RecordedAt, r.RecordedBy, r.Note })
+                .ToListAsync();
+
+            return records.Select(r => (
+                r.ClientId,
+                NormalizeDatabaseTime(r.RecordedAt),
+                r.RecordedBy,
+                r.Note
+            )).ToList();
+        }
 
         # region IPIntel
 

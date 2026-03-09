@@ -455,6 +455,17 @@ namespace Content.Server.Database
 
         #endregion
 
+        // Amour edit
+        #region Amour Client Registry
+
+        Task<bool> HasClientRecord(Guid clientId, CancellationToken cancel = default);
+        Task<Guid?> FindFirstClientRecord(List<Guid> clientIds, CancellationToken cancel = default);
+        Task AddClientRecord(Guid clientId, string recordedBy, string? note = null);
+        Task<bool> RemoveClientRecord(Guid clientId);
+        Task<List<(Guid ClientId, DateTime RecordedAt, string RecordedBy, string? Note)>> GetClientRecords();
+
+        #endregion
+
         #region IPintel
 
         Task<bool> UpsertIPIntelCache(DateTime time, IPAddress ip, float score);
@@ -1290,6 +1301,37 @@ namespace Content.Server.Database
         }
 
         #endregion
+
+        // Amour edit
+        public Task<bool> HasClientRecord(Guid clientId, CancellationToken cancel = default)
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.HasClientRecord(clientId, cancel));
+        }
+
+        public Task<Guid?> FindFirstClientRecord(List<Guid> clientIds, CancellationToken cancel = default)
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.FindFirstClientRecord(clientIds, cancel));
+        }
+
+        public Task AddClientRecord(Guid clientId, string recordedBy, string? note = null)
+        {
+            DbWriteOpsMetric.Inc();
+            return RunDbCommand(() => _db.AddClientRecord(clientId, recordedBy, note));
+        }
+
+        public Task<bool> RemoveClientRecord(Guid clientId)
+        {
+            DbWriteOpsMetric.Inc();
+            return RunDbCommand(() => _db.RemoveClientRecord(clientId));
+        }
+
+        public Task<List<(Guid ClientId, DateTime RecordedAt, string RecordedBy, string? Note)>> GetClientRecords()
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.GetClientRecords());
+        }
 
         public Task<bool> UpsertIPIntelCache(DateTime time, IPAddress ip, float score)
         {
